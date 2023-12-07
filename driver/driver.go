@@ -1,24 +1,18 @@
 package driver
 
 import (
-	"database/sql"
 	"log"
 
-	"github.com/klahnen/spotifyService/config"
-	"github.com/lib/pq"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
-func ConnectDB() *sql.DB {
-	conf := config.GetConfig()
-	pgURL, err := pq.ParseURL(conf.PostgresURL)
-	db, err := sql.Open("postgres", pgURL)
+func ConnectDB() *gorm.DB {
+	db, err := gorm.Open(sqlite.Open("gorm.db"), &gorm.Config{})
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("couldn't create sqlite DB")
 	}
 
-	if err = db.Ping(); err != nil {
-		log.Fatal(err)
-	}
 	return db
 }
