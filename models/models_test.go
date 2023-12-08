@@ -49,18 +49,18 @@ func TestArtistCreation(t *testing.T) {
 
 func TestISRCCreation(t *testing.T) {
 
-	db.AutoMigrate(&models.Artist{}, &models.ISRC{})
+	db.AutoMigrate(&models.Artist{}, &models.Track{})
 
 	artist := models.Artist{Name: "some artist name"}
 	db.Create(&artist)
 
-	isrc := models.ISRC{Title: "my title", SpotifyImageURI: "some-uri", ArtistID: artist.ID}
+	isrc := models.Track{Title: "my title", SpotifyImageURI: "some-uri", ArtistID: artist.ID}
 	db.Create(&isrc)
 	db.First(&artist, "id = ?", artist.ID)
 
-	db.Model(&artist).Association("ISRCs").Find(&artist.ISRCs)
+	db.Model(&artist).Association("Tracks").Find(&artist.Tracks)
 
 	assert.Equal(t, isrc.ArtistID, artist.ID)
-	assert.Equal(t, 1, len(artist.ISRCs))
-	assert.Equal(t, "some-uri", artist.ISRCs[0].SpotifyImageURI)
+	assert.Equal(t, 1, len(artist.Tracks))
+	assert.Equal(t, "some-uri", artist.Tracks[0].SpotifyImageURI)
 }
