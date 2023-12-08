@@ -1,14 +1,16 @@
-package controllers
+package app
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"log"
+	"math/rand"
 	"net/http"
+	"net/url"
 	"strings"
-
-	"github.com/klahnen/spotifyService/config"
+	"time"
 )
 
 type callbackResponse struct {
@@ -19,7 +21,7 @@ type callbackResponse struct {
 	Refresh_token string `json:"refresh_token"`
 }
 
-func (c Controller) Callback(config config.Config) http.HandlerFunc {
+func (a *App) Callback() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
@@ -31,13 +33,13 @@ func (c Controller) Callback(config config.Config) http.HandlerFunc {
 			return
 		}
 
-		accessTokenResponse, err := requestAccessToken(code, config.ClientID, config.ClientSecret)
+		accessTokenResponse, err := requestAccessToken(code, a.conf.ClientID, a.conf.ClientSecret)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
-		fmt.Println(accessTokenResponse)
+		log.Println(accessTokenResponse)
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(accessTokenResponse)
 	}
@@ -69,4 +71,29 @@ func requestAccessToken(code string, clientID string, clientSecret string) (call
 
 	return response, nil
 
+}
+
+func generateRandomString(length int) string {
+	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	rand.Seed(time.Now().UnixNano())
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[rand.Intn(len(charset))]
+	}
+	return string(b)
+}
+
+func (a *App) Login() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		state := generateRandomString(16)
+
+		u := fmt.Sprintf("https://accounts.spotify.com/authorize?%s", url.Values{
+			"response_type": {"code"},
+			"client_id":     {a.conf.ClientID},
+			"redirect_uri":  {a.conf.RedirectURI},
+			"state":         {state},
+		}.Encode())
+		log.Println(u)
+		http.Redirect(w, r, u, http.StatusTemporaryRedirect)
+	}
 }
