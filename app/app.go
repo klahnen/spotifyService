@@ -50,6 +50,10 @@ func (a *App) CreateISRC() http.HandlerFunc {
 		defer r.Body.Close()
 
 		data := a.apiSearchTrackByISCR(createRequest.ISRC)
+		if len(data.Tracks.Items) == 0 {
+			respondWithError(w, http.StatusBadRequest, "No data to process")
+			return
+		}
 
 		var track models.Track
 		var artist models.Artist
