@@ -15,7 +15,7 @@ import (
 // @license.name  Apache 2.0
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host      localhost:8000
+// @host      127.0.0.1:8000
 // @BasePath  /
 
 // @externalDocs.description  OpenAPI

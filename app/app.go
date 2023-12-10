@@ -37,8 +37,9 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/track/{iscr}", a.GetTrackByISRC()).Methods("GET")
 	a.Router.HandleFunc("/tracks", a.GetTracks()).Methods("GET")
 	a.Router.HandleFunc("/artist/{name}", a.GetArtist()).Methods("GET")
+	a.Router.PathPrefix("/docs/swagger.json").Handler(http.StripPrefix("/docs/", http.FileServer(http.Dir("docs"))))
 	a.Router.PathPrefix("/docs/").Handler(httpSwagger.Handler(
-		httpSwagger.URL("http://localhost:8000/docs/swagger.json"), //The url pointing to API definition
+		httpSwagger.URL("http://127.0.0.1:8000/docs/swagger.json"), //The url pointing to API definition
 		httpSwagger.DeepLinking(true),
 		httpSwagger.DocExpansion("none"),
 		httpSwagger.DomID("swagger-ui"),
