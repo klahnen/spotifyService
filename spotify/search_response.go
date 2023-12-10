@@ -1,45 +1,4 @@
-package models
-
-import (
-	"errors"
-	"log"
-
-	"gorm.io/gorm"
-)
-
-type Artist struct {
-	gorm.Model
-	Name   string
-	Tracks []Track
-}
-
-func (a *Artist) getArtist(db *gorm.DB) error {
-	return errors.New("not implemented")
-}
-
-func (a *Artist) CreateArtist(db *gorm.DB) error {
-	// If ISRC already in DB skip
-	dbTrack := Track{ISRC: a.Tracks[0].ISRC}
-	db.Where("isrc = ?", a.Tracks[0].ISRC).First(&dbTrack)
-	log.Println("dbtrack", dbTrack)
-	if dbTrack.ID > 0 {
-		return nil
-	}
-
-	// If already an artist with the same name, get existent Artist and just create Track
-	dbArtist := Artist{}
-	db.Where("name = ?", a.Name).First(&dbArtist)
-
-	if dbArtist.ID != 0 {
-		a.ID = dbArtist.ID
-		db.Save(&a)
-		return nil
-	}
-
-	result := db.Create(&a)
-	log.Println(a)
-	return result.Error
-}
+package spotify
 
 type SearchResponse struct {
 	Tracks struct {

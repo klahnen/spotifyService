@@ -13,13 +13,6 @@ func (a *App) GetTrackByISRC() http.HandlerFunc {
 
 		iscr := vars["iscr"]
 
-		var err error
-
-		if err != nil {
-			respondWithError(w, http.StatusBadRequest, "Invalid ISCR")
-			return
-		}
-
 		t := models.Track{ISRC: iscr}
 		if err := t.GetTrack(a.DB); err != nil {
 			respondWithError(w, http.StatusNotFound, "Track not found")

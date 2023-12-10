@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/klahnen/spotifyService/models"
+	"github.com/klahnen/spotifyService/spotify"
 )
 
 func (a *App) CreateISRC() http.HandlerFunc {
@@ -43,8 +44,8 @@ func (a *App) CreateISRC() http.HandlerFunc {
 	}
 }
 
-func (a *App) apiSearchTrackByISCR(iscr string) models.SearchResponse {
-	var data models.SearchResponse
+func (a *App) apiSearchTrackByISCR(iscr string) spotify.SearchResponse {
+	var data spotify.SearchResponse
 
 	url := "https://api.spotify.com/v1/search?type=track&q=isrc%3A" + iscr
 
@@ -69,17 +70,17 @@ func (a *App) apiSearchTrackByISCR(iscr string) models.SearchResponse {
 
 }
 
-func (a *App) populateTrackWithData(data models.SearchResponse, itemIndex int, t *models.Track) {
+func (a *App) populateTrackWithData(data spotify.SearchResponse, itemIndex int, t *models.Track) {
 	t.Title = data.Tracks.Items[itemIndex].Name
 	t.SpotifyImageURI = data.Tracks.Items[itemIndex].Album.Images[0].URL
 	t.ISRC = data.Tracks.Items[itemIndex].ExternalIds.Isrc
 }
 
-func (a *App) populateArtistWithData(data models.SearchResponse, itemIndex int, artist *models.Artist) {
+func (a *App) populateArtistWithData(data spotify.SearchResponse, itemIndex int, artist *models.Artist) {
 	artist.Name = data.Tracks.Items[itemIndex].Artists[0].Name
 }
 
-func (a *App) getMostPopularItemIndex(data models.SearchResponse) int {
+func (a *App) getMostPopularItemIndex(data spotify.SearchResponse) int {
 	mostPopularIndex := 0
 
 	for i := range data.Tracks.Items {
