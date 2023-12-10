@@ -55,7 +55,6 @@ func (a *App) apiSearchTrackByISCR(iscr string) models.SearchResponse {
 
 	res, _ := http.DefaultClient.Do(req)
 
-	log.Println(res.StatusCode)
 	if res.StatusCode != http.StatusOK {
 		log.Fatal("renew the token")
 		return data

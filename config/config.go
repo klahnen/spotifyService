@@ -21,7 +21,7 @@ func GetConfig() Config {
 	config.ClientSecret = getenvs.GetEnvString("CLIENT_SECRET", "4c7f1a7905d14e9bbc91116909a7bea1")
 	config.DBName = getenvs.GetEnvString("DB_NAME", "dev.db")
 	config.RedirectURI = getenvs.GetEnvString("REDIRECT_URI", "http://127.0.0.1:8000/callback")
-	config.BearerToken = "BQB2toadWFJ0fkVS8KqGnPmhNAi9f13GQcB7CnyZRMOJYXFhvaaoGBx5bXmoHpHfw19wRQmFjWiKNX_LrBYmLSVzYL421ZkRSme3fJp4nTs-CdV5mBo6YjhTj9SavMET7sEMQ5pA0joWY17hxui2jDXCUcI2IeoFm4pX6XDRzLQ1tZI"
+	config.BearerToken = getenvs.GetEnvString("BEARER_TOKEN", "")
 
 	return config
 }

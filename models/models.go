@@ -41,22 +41,6 @@ func (a *Artist) CreateArtist(db *gorm.DB) error {
 	return result.Error
 }
 
-type Track struct {
-	gorm.Model
-	ISRC            string
-	SpotifyImageURI string
-	Title           string
-	ArtistID        uint
-}
-
-type ISRCSuccess struct {
-	Message string `json:"message"`
-}
-
-type CreateISRCRequest struct {
-	ISRC string
-}
-
 type SearchResponse struct {
 	Tracks struct {
 		Href  string `json:"href"`

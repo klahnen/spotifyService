@@ -30,7 +30,8 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/health", a.Health()).Methods("GET")
 	a.Router.HandleFunc("/login", a.Login()).Methods("GET")
 	a.Router.HandleFunc("/callback", a.Callback()).Methods("GET")
-	a.Router.HandleFunc("/isrc", a.CreateISRC()).Methods("POST")
+	a.Router.HandleFunc("/isrc", a.CreateISRC()).Methods("POST") // ToDo change endpoint to track
+	a.Router.HandleFunc("/track/{iscr}", a.GetTrackByISRC()).Methods("GET")
 }
 
 func (a *App) Run() {
