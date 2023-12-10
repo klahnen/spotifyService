@@ -1,6 +1,8 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type Track struct {
 	gorm.Model
@@ -17,6 +19,11 @@ func (t *Track) GetTrack(db *gorm.DB) error {
 		err = result.Error
 	}
 	return err
+}
+
+func GetTracks(db *gorm.DB, tracks *[]Track) error {
+	db.Find(tracks)
+	return nil
 }
 
 type ISRCSuccess struct {

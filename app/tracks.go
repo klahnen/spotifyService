@@ -30,3 +30,11 @@ func (a *App) GetTrackByISRC() http.HandlerFunc {
 
 	}
 }
+
+func (a *App) GetTracks() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		tracks := []models.Track{}
+		models.GetTracks(a.DB, &tracks)
+		respondWithJSON(w, http.StatusOK, tracks)
+	}
+}
