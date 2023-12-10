@@ -6,8 +6,7 @@ import (
 
 // @title          spotifyService API
 // @version         1.0
-// @description     This is a sample server celler server.
-// @termsOfService  http://swagger.io/terms/
+// @description     This is a sample server
 
 // @contact.name   Fernando
 // @contact.email  klahnen@gmail.com

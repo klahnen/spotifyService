@@ -4,6 +4,9 @@ import (
 	"gorm.io/gorm"
 )
 
+// Track model info
+// @Description Track information
+// @Description ISRC, image and artistID
 type Track struct {
 	gorm.Model
 	ISRC            string

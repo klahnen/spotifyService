@@ -9,3 +9,5 @@ go test -v ./...
 
 # swagger
 go install github.com/swaggo/swag/cmd/swag@latest
+
+swag init --parseDependency --parseInternal

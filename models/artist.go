@@ -6,6 +6,9 @@ import (
 	"gorm.io/gorm"
 )
 
+// Artist model info
+// @Description Artist information
+// @Description Name and tracks
 type Artist struct {
 	gorm.Model
 	Name   string

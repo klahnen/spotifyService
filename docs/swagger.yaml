@@ -1,18 +1,113 @@
 basePath: /
+definitions:
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+  models.Artist:
+    description: Artist information Name and tracks
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      name:
+        type: string
+      tracks:
+        items:
+          $ref: '#/definitions/models.Track'
+        type: array
+      updatedAt:
+        type: string
+    type: object
+  models.CreateISRCRequest:
+    properties:
+      isrc:
+        type: string
+    type: object
+  models.Track:
+    description: Track information ISRC, image and artistID
+    properties:
+      artistID:
+        type: integer
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      isrc:
+        type: string
+      spotifyImageURI:
+        type: string
+      title:
+        type: string
+      updatedAt:
+        type: string
+    type: object
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
-host: localhost:8000
+host: 127.0.0.1:8000
 info:
   contact:
     email: klahnen@gmail.com
     name: Fernando
-  description: This is a sample server celler server.
+  description: This is a sample server
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: http://swagger.io/terms/
   title: spotifyService API
   version: "1.0"
-paths: {}
+paths:
+  /artist/{name}:
+    get:
+      parameters:
+      - description: Name
+        in: path
+        name: name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Artist'
+        "404":
+          description: Not Found
+          schema:
+            type: object
+      summary: Get an artist
+  /isrc:
+    post:
+      parameters:
+      - description: ISRC
+        in: body
+        name: name
+        required: true
+        schema:
+          type: object
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.CreateISRCRequest'
+      summary: From an ISRC executes a search in Spotify to pull data from artists
+        and tracks
+  /tracks:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Track'
+            type: array
+      summary: List of all tracks
 swagger: "2.0"
