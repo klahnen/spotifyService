@@ -1,10 +1,12 @@
 # spotifyService
 
 ## Getting the token
-go run main.go // Then follow the OAUTH2 process
+* start the server: `go run main.go` // Then follow the OAUTH2 process
+* stop the server `ctrl+c`
+* start the server again: `go run main.go`
 
 ## Testing
-export BEARER_TOKEN=<access token>
+
 go test -v ./...
 
 # swagger
