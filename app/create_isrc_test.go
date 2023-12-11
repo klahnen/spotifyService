@@ -50,7 +50,6 @@ func (m *MockMusicService) ApiSearchTrackByISCR(isrc string) spotify.SearchRespo
 }
 
 func TestCreateISRCEndpoint(t *testing.T) {
-
 	mockClient := MockMusicService{}
 
 	handler := a.CreateISRC(&mockClient)
