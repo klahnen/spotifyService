@@ -16,8 +16,7 @@ import (
 var a app.App
 
 func deleteTestDB() {
-	currentPath, _ := os.Getwd()
-	err := os.Remove(currentPath + "/dev.db")
+	err := os.Remove("/tmp/dev.db")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -41,7 +40,7 @@ func executeRequest(req *http.Request) *httptest.ResponseRecorder {
 	return rr
 }
 
-func TestCreateISRCEndpoint1(t *testing.T) {
+func TestCreateISRCEndpoint(t *testing.T) {
 	var jsonStr = []byte(`{"ISRC":"GBAYE0601477"}`)
 	req, _ := http.NewRequest("POST", "/isrc", bytes.NewBuffer(jsonStr))
 	req.Header.Set("Content-Type", "application/json")
