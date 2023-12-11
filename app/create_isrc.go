@@ -2,7 +2,6 @@ package app
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/klahnen/spotifyService/models"
@@ -25,20 +24,13 @@ func (a *App) CreateISRC() http.HandlerFunc {
 
 		defer r.Body.Close()
 
-		data := a.apiSearchTrackByISCR(createRequest.ISRC)
+		data := spotify.ApiSearchTrackByISCR(createRequest.ISRC)
 		if len(data.Tracks.Items) == 0 {
 			respondWithError(w, http.StatusBadRequest, "No data to process")
 			return
 		}
 
-		var track models.Track
-		var artist models.Artist
-
-		itemIndex := a.getMostPopularItemIndex(data)
-		a.populateTrackWithData(data, itemIndex, &track)
-		a.populateArtistWithData(data, itemIndex, &artist)
-
-		artist.Tracks = []models.Track{track}
+		artist := a.getArtistFromData(data)
 
 		if err := artist.CreateArtist(a.DB); err != nil {
 			respondWithError(w, http.StatusInternalServerError, err.Error())
@@ -49,40 +41,18 @@ func (a *App) CreateISRC() http.HandlerFunc {
 	}
 }
 
-func (a *App) apiSearchTrackByISCR(iscr string) spotify.SearchResponse {
-	var data spotify.SearchResponse
+func (a *App) getArtistFromData(data spotify.SearchResponse) models.Artist {
+	itemIndex := a.getMostPopularItemIndex(data)
 
-	url := "https://api.spotify.com/v1/search?type=track&q=isrc%3A" + iscr
-
-	req, _ := http.NewRequest("GET", url, nil)
-
-	token := a.conf.BearerToken
-	req.Header.Add("Authorization", "Bearer "+token)
-
-	res, _ := http.DefaultClient.Do(req)
-
-	if res.StatusCode != http.StatusOK {
-		log.Fatal("renew the token")
-		return data
+	return models.Artist{
+		Name: data.Tracks.Items[itemIndex].Artists[0].Name,
+		Tracks: []models.Track{{
+			Title:           data.Tracks.Items[itemIndex].Name,
+			SpotifyImageURI: data.Tracks.Items[itemIndex].Album.Images[0].URL,
+			ISRC:            data.Tracks.Items[itemIndex].ExternalIds.Isrc,
+		}},
 	}
 
-	defer res.Body.Close()
-
-	decoder := json.NewDecoder(res.Body)
-	decoder.Decode(&data)
-
-	return data
-
-}
-
-func (a *App) populateTrackWithData(data spotify.SearchResponse, itemIndex int, t *models.Track) {
-	t.Title = data.Tracks.Items[itemIndex].Name
-	t.SpotifyImageURI = data.Tracks.Items[itemIndex].Album.Images[0].URL
-	t.ISRC = data.Tracks.Items[itemIndex].ExternalIds.Isrc
-}
-
-func (a *App) populateArtistWithData(data spotify.SearchResponse, itemIndex int, artist *models.Artist) {
-	artist.Name = data.Tracks.Items[itemIndex].Artists[0].Name
 }
 
 func (a *App) getMostPopularItemIndex(data spotify.SearchResponse) int {
