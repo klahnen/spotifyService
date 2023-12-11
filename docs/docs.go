@@ -50,7 +50,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/isrc": {
+        "/track": {
             "post": {
                 "summary": "From an ISRC executes a search in Spotify to pull data from artists and tracks",
                 "parameters": [
@@ -69,6 +69,19 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.CreateISRCRequest"
+                        }
+                    }
+                }
+            }
+        },
+        "/track/{iscr}": {
+            "get": {
+                "summary": "Shows metadata of a track",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Track"
                         }
                     }
                 }

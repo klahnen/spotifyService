@@ -12,12 +12,12 @@ type MusicService interface {
 	ApiSearchTrackByISCR(iscr string) spotify.SearchResponse
 }
 
-// CreateISRC ... Creates an ISRC
+// CreateTrack ... Creates an ISRC
 // @Summary From an ISRC executes a search in Spotify to pull data from artists and tracks
 // @Param name body object true "ISRC"
 // @Success 200 {object} models.CreateISRCRequest
-// @Router /isrc [post]
-func (a *App) CreateISRC(client MusicService) http.HandlerFunc {
+// @Router /track [post]
+func (a *App) CreateTrack(client MusicService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var createRequest models.CreateISRCRequest
 		decoder := json.NewDecoder(r.Body)

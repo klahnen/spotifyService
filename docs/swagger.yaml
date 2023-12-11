@@ -84,7 +84,7 @@ paths:
           schema:
             type: object
       summary: Get an artist
-  /isrc:
+  /track:
     post:
       parameters:
       - description: ISRC
@@ -100,6 +100,14 @@ paths:
             $ref: '#/definitions/models.CreateISRCRequest'
       summary: From an ISRC executes a search in Spotify to pull data from artists
         and tracks
+  /track/{iscr}:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Track'
+      summary: Shows metadata of a track
   /tracks:
     get:
       responses:

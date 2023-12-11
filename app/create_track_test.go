@@ -52,10 +52,10 @@ func (m *MockMusicService) ApiSearchTrackByISCR(isrc string) spotify.SearchRespo
 func TestCreateISRCEndpoint(t *testing.T) {
 	mockClient := MockMusicService{}
 
-	handler := a.CreateISRC(&mockClient)
+	handler := a.CreateTrack(&mockClient)
 
 	var jsonStr = []byte(`{"ISRC":"GBAYE0601477"}`)
-	req, _ := http.NewRequest("POST", "/isrc", bytes.NewBuffer(jsonStr))
+	req, _ := http.NewRequest("POST", "/track", bytes.NewBuffer(jsonStr))
 	req.Header.Set("Content-Type", "application/json")
 
 	response := executeRequest(req, handler)
