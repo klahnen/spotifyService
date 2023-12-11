@@ -6,6 +6,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/klahnen/spotifyService/config"
+	"github.com/klahnen/spotifyService/spotify"
 
 	_ "github.com/klahnen/spotifyService/docs"
 	"github.com/klahnen/spotifyService/driver"
@@ -33,7 +34,7 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/health", a.Health()).Methods("GET")
 	a.Router.HandleFunc("/login", a.Login()).Methods("GET")
 	a.Router.HandleFunc("/callback", a.Callback()).Methods("GET")
-	a.Router.HandleFunc("/isrc", a.CreateISRC()).Methods("POST") // ToDo change endpoint to track
+	a.Router.HandleFunc("/isrc", a.CreateISRC(spotify.GetClient())).Methods("POST") // ToDo change endpoint to track
 	a.Router.HandleFunc("/track/{iscr}", a.GetTrackByISRC()).Methods("GET")
 	a.Router.HandleFunc("/tracks", a.GetTracks()).Methods("GET")
 	a.Router.HandleFunc("/artist/{name}", a.GetArtist()).Methods("GET")

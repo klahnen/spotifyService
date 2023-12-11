@@ -10,6 +10,8 @@ import (
 	"testing"
 
 	"github.com/klahnen/spotifyService/app"
+	"github.com/klahnen/spotifyService/mocks"
+	"github.com/klahnen/spotifyService/spotify"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -33,19 +35,31 @@ func TestMain(m *testing.M) {
 	os.Exit(code)
 }
 
-func executeRequest(req *http.Request) *httptest.ResponseRecorder {
+func executeRequest(req *http.Request, handler http.Handler) *httptest.ResponseRecorder {
 	rr := httptest.NewRecorder()
-	a.Router.ServeHTTP(rr, req)
-
+	handler.ServeHTTP(rr, req)
 	return rr
 }
 
+type MockMusicService struct{}
+
+func (m *MockMusicService) ApiSearchTrackByISCR(isrc string) spotify.SearchResponse {
+	var response spotify.SearchResponse
+	json.Unmarshal([]byte(mocks.GetTrack_GBAYE0601477()), &response)
+	return response
+}
+
 func TestCreateISRCEndpoint(t *testing.T) {
+
+	mockClient := MockMusicService{}
+
+	handler := a.CreateISRC(&mockClient)
+
 	var jsonStr = []byte(`{"ISRC":"GBAYE0601477"}`)
 	req, _ := http.NewRequest("POST", "/isrc", bytes.NewBuffer(jsonStr))
 	req.Header.Set("Content-Type", "application/json")
 
-	response := executeRequest(req)
+	response := executeRequest(req, handler)
 	assert.Equal(t, http.StatusCreated, response.Result().StatusCode)
 
 	var m map[string]interface{}

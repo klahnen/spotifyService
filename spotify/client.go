@@ -7,7 +7,14 @@ import (
 	"os"
 )
 
-func ApiSearchTrackByISCR(iscr string) SearchResponse {
+type Client struct {
+}
+
+func GetClient() *Client {
+	return &Client{}
+}
+
+func (c *Client) ApiSearchTrackByISCR(iscr string) SearchResponse {
 	var data SearchResponse
 
 	baseUrl := "https://api.spotify.com/"
